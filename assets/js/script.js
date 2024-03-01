@@ -16,20 +16,23 @@ const getBtn = (btns) => {
     }
 
 }
-const getBtnID = async (id) => {
+const getBtnID = async (id = '1000') => {
     console.log(id);
     const res = await fetch(`https://openapi.programming-hero.com/api/videos/category/${id}`)
     const data = await res.json();
     getVideos(data.data);
-    const errorMsg = document.getElementById('error_msg');
-    if(data.length > 0){
-        errorMsg.classList.remove('hidden');
-    }
 }
 
 const getVideos = (videos) => {
     const videoConatiner = document.getElementById('videos_contaienr');
     videoConatiner.textContent = '';
+    const errorMsg = document.getElementById('error_msg');
+    if(videos.length === 0){
+        errorMsg.classList.remove('hidden');
+    }
+    else(
+        errorMsg.classList.add('hidden')
+    )
     console.log(videos);
     videos.map((video) => {
         verified = '';
@@ -40,7 +43,7 @@ const getVideos = (videos) => {
         div.innerHTML = `
         <div class="card p-5 shadow-xl md:h-96">
         <div class="flex justify-center">
-            <img class=" md:h-52 " src="${video.thumbnail}" alt="">
+            <img class=" md:h-52 w-full" src="${video.thumbnail}" alt="">
         </div>
         <div class="flex mt-5">
             <div class="w-1/5 ">
@@ -62,3 +65,4 @@ const getVideos = (videos) => {
 }
 
 allBtn()
+window.onload = getBtnID();
