@@ -6,9 +6,8 @@ const allBtn = async () => {
 }
 
 const getBtn = (btns) => {
-    console.log(btns);
     const btnContiner = document.getElementById('btn_container');
-    for(const btn of btns){
+    for (const btn of btns) {
         const button = document.createElement('button');
         button.className = 'btn rounded-none text-lg font-semibold text-white bg-indigo-400 px-5 py-2';
         button.innerText = btn.category;
@@ -18,9 +17,48 @@ const getBtn = (btns) => {
 
 }
 const getBtnID = async (id) => {
-console.log(id);
+    console.log(id);
     const res = await fetch(`https://openapi.programming-hero.com/api/videos/category/${id}`)
     const data = await res.json();
-    console.log(data);
+    getVideos(data.data);
+    const errorMsg = document.getElementById('error_msg');
+    if(data.length > 0){
+        errorMsg.classList.remove('hidden');
+    }
 }
+
+const getVideos = (videos) => {
+    const videoConatiner = document.getElementById('videos_contaienr');
+    videoConatiner.textContent = '';
+    console.log(videos);
+    videos.map((video) => {
+        verified = '';
+        if(video.authors[0].verified){
+            verified = `<img src="assets/images/Group 3.png" alt=""></img>`
+        }
+        const div = document.createElement('div');
+        div.innerHTML = `
+        <div class="card p-5 shadow-xl md:h-96">
+        <div class="flex justify-center">
+            <img class=" md:h-52 " src="${video.thumbnail}" alt="">
+        </div>
+        <div class="flex mt-5">
+            <div class="w-1/5 ">
+                <img class="rounded-full w-full h-1/2" src="${video.authors[0].profile_picture}" alt="">
+            </div>
+            <div class="w-4/5 ml-4">
+                <div class="title">
+                    <h3 class="text-xl font-semibold">${video.title}</h3>
+                    <p class="flex gap-3 mt-2">${video.authors[0].profile_name} ${verified}</p>
+                    <p class="text-sm">${video.others.views} Views</p>
+                </div>
+            </div>
+        </div>
+    </div>
+        `
+
+        videoConatiner.appendChild(div);
+    })
+}
+
 allBtn()
