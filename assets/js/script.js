@@ -60,15 +60,30 @@ const getVideos = (videos, isSort) => {
         errorMsg.classList.add('hidden')
     )
     videos.map((video) => {
+        // check verified badge have or not.
         verified = '';
         if (video.authors[0].verified) {
             verified = `<img src="assets/images/Group 3.png" alt=""></img>`
         }
+
+        // get the video duration.
+        let haveDuration = '';
+        if(video.others.posted_date){
+            const time = (millisecond) => {
+                minute = Math.floor((millisecond / 1000 /60) % 60);
+                hour = Math.floor((millisecond / 1000 /60 /60) % 24);
+                return `${hour}hrs ${minute}min ago`
+            }
+            const duration = time(video.others.posted_date)
+            haveDuration = `<div class=" absolute bottom-1 right-1 bg-black/50 rounded-lg px-1 text-white">${duration}</div>`
+        }
+
         const div = document.createElement('div');
         div.innerHTML = `
         <div class="card p-5 shadow-xl md:h-96">
-        <div class="flex justify-center">
+        <div class="flex justify-center relative">
             <img class=" md:h-52 w-full" src="${video.thumbnail}" alt="">
+            ${haveDuration}
         </div>
         <div class="flex mt-5">
             <div class="w-1/5 ">
