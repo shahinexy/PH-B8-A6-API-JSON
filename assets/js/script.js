@@ -23,20 +23,31 @@ const getBtn = (btns) => {
     }
 
 }
-const getBtnID = async (id = '1000') => {
+
+let defaultid = '1000';
+let isSort = false;
+function sort(){
+    isSort = true;
+    getBtnID(defaultid,isSort);
+}
+
+const getBtnID = async (id, isSort) => {
+    defaultid = id;
     const res = await fetch(`https://openapi.programming-hero.com/api/videos/category/${id}`)
     const data = await res.json();
-    getVideos(data.data);
+    getVideos(data.data, isSort);
 }
-const isSort = false;
-const getVideos = (videos) => {
+
+
+
+const getVideos = (videos, isSort) => {
     if(isSort){
         videos.sort((a,b) => {
-            const a = a.videos?.views;
-            const b = b.videos?.views;
-            const aInNumber = parseFloat(a.replace('K', ''))
-            const bInNumber = parseFloat(b.replace('K', ''))
-            return aInNumber - bInNumber;
+            const first = a.others?.views;
+            const second = b.others?.views;
+            const aInNumber = parseFloat(first.replace('K', ''))
+            const bInNumber = parseFloat(second.replace('K', ''))
+            return bInNumber - aInNumber;
         })
     }
     const videoConatiner = document.getElementById('videos_contaienr');
@@ -79,4 +90,4 @@ const getVideos = (videos) => {
 }
 
 allBtn()
-window.onload = getBtnID();
+window.onload = getBtnID(defaultid);
